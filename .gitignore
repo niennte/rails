@@ -28,3 +28,12 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+
+
+# MAC OSx files
+.DS_Store
+
+# IntelliJ project files
+.idea
+*.iml
+
