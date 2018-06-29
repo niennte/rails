@@ -42,6 +42,71 @@ $ rails db:migrate
 == 20180628231412 CreatePosts: migrated (0.0011s) =============================
 
 
+
+# routes, controller and and views
+$ rails routes
+                   Prefix Verb   URI Pattern                                                                              Controller#Action
+                site_home GET    /site/home(.:format)                                                                     site#home
+                    posts GET    /posts(.:format)                                                                         posts#index
+                          POST   /posts(.:format)                                                                         posts#create
+                 new_post GET    /posts/new(.:format)                                                                     posts#new
+                edit_post GET    /posts/:id/edit(.:format)                                                                posts#edit
+                     post GET    /posts/:id(.:format)                                                                     posts#show
+                          PATCH  /posts/:id(.:format)                                                                     posts#update
+                          PUT    /posts/:id(.:format)                                                                     posts#update
+                          DELETE /posts/:id(.:format)                                                                     posts#destroy
+       rails_service_blob GET    /rails/active_storage/blobs/:signed_id/*filename(.:format)                               active_storage/blobs#show
+rails_blob_representation GET    /rails/active_storage/representations/:signed_blob_id/:variation_key/*filename(.:format) active_storage/representations#show
+       rails_disk_service GET    /rails/active_storage/disk/:encoded_key/*filename(.:format)                              active_storage/disk#show
+update_rails_disk_service PUT    /rails/active_storage/disk/:encoded_token(.:format)                                      active_storage/disk#update
+     rails_direct_uploads POST   /rails/active_storage/direct_uploads(.:format)
+
+$ rails generate scaffold_controller Post
+Running via Spring preloader in process 58722
+      create  app/controllers/posts_controller.rb
+      invoke  erb
+      create    app/views/posts
+      create    app/views/posts/index.html.erb
+      create    app/views/posts/edit.html.erb
+      create    app/views/posts/show.html.erb
+      create    app/views/posts/new.html.erb
+      create    app/views/posts/_form.html.erb
+      invoke  test_unit
+      create    test/controllers/posts_controller_test.rb
+      create    test/system/posts_test.rb
+      invoke  helper
+      create    app/helpers/posts_helper.rb
+      invoke    test_unit
+      invoke  jbuilder
+      create    app/views/posts/index.json.jbuilder
+      create    app/views/posts/show.json.jbuilder
+      create    app/views/posts/_post.json.jbuilder
+
+
+# dummy records
+- boots up in an IRB session
+syntax:
+Model.create attribute: "content goes here...", another_attribute: "more content..."
+
+$ rails console
+Running via Spring preloader in process 58770
+Loading development environment (Rails 5.2.0)
+irb(main):001:0> Post.create title: "My first post, be nice", body: "I'm not sure what to write here..."
+   (0.1ms)  begin transaction
+  Post Create (33.8ms)  INSERT INTO "posts" ("title", "body", "created_at", "updated_at") VALUES (?, ?, ?, ?)  [["title", "My first post, be nice"], ["body", "I'm not sure what to write here..."], ["created_at", "2018-06-29 00:16:37.265773"], ["updated_at", "2018-06-29 00:16:37.265773"]]
+   (173.5ms)  commit transaction
+=> #<Post id: 1, title: "My first post, be nice", body: "I'm not sure what to write here...", created_at: "2018-06-29 00:16:37", updated_at: "2018-06-29 00:16:37">
+irb(main):002:0>
+
+
 $ rails server
-http://0.0.0.0:3000/site/home
+      http://localhost:3000/posts
+
+
+
+
+
+
+
+
 
