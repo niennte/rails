@@ -271,14 +271,185 @@ Completed 302 Found in 3736ms (ActiveRecord: 2.6ms)
 
 
 
+- - -
+
+## auth
+- encryption for passwords:
+- bcrypt gem -
+	irreversible hash for passwords
+	salt (against rainbow tables)
+
+rails generate migration add_password_digest_to_users password_digest: string
+
+
+$ rails generate migration add_password_digest_to_users password_digest:string
+Running via Spring preloader in process 66409
+      invoke  active_record
+      create    db/migrate/20180629191122_add_password_digest_to_users.rb
+
+
+- in the model:
+ActiveRecord::Base.has_secure_password
+
+- automatically stores password as password hashed digest in the db
+- create attributes like password and password confirmation that can be used to log in
+- creates a method called authenticate
+
+* - doesn't need any arguments, assumes the db column is called password_digest
+
+
+- run the migration
+
+- uncomment brypt gem in the Gemfile
+- run bundle
+
+$ rails bundle
+...
+Bundle complete! 20 Gemfile dependencies, 84 gems now installed.
+Use `bundle info [gemname]` to see where a bundled gem is installed.
+
+- restart server
+
+- update views (create, update) - via the form
+	add password and password confirmation
+
+- add password field to the controller white list
+
+
+## enable user login
+- HTTP requests don't trace themselves
+- cookies to establish sessions
+
+- add sessions controller (no scaffold)
+
+$ rails generate controller Sessions new
+Running via Spring preloader in process 66687
+      create  app/controllers/sessions_controller.rb
+       route  get 'sessions/new'
+      invoke  erb
+      create    app/views/sessions
+      create    app/views/sessions/new.html.erb
+      invoke  test_unit
+      create    test/controllers/sessions_controller_test.rb
+      invoke  helper
+      create    app/helpers/sessions_helper.rb
+      invoke    test_unit
+      invoke  assets
+      invoke    coffee
+      create      app/assets/javascripts/sessions.coffee
+      invoke    scss
+      create      app/assets/stylesheets/sessions.scss
+
+- add routes for session
+
+config/routes.rb
+  get '/login', to: 'sessions#new'
+  post '/login', to: 'sessions#create'
+  delete '/logout', to: 'sessions#destroy'
+
+- refine session controller
+
+- add current_user method to application_controller (abstract class)
+
+
+* note:
+by default, session helper method uses encrypted cookie
+to make session readable in browser, use controller method cookie instead
+
+* !! Rails cookies: https://www.justinweiss.com/articles/how-rails-sessions-work/
+Rails has no native session management.
+
+	- default behavior relies on encrypted cookies
+	- session done in this way needs to be slim!
+
+reference:
+CS Standford (generic)
+https://web.stanford.edu/~ouster/cgi-bin/cs142-fall10/lecture.php?topic=cookie
+rails sessions:
+https://www.justinweiss.com/articles/how-rails-sessions-work/
+
+* note: flash.now -- helper method to pass messages to forms
+
+## set content ownership
+
+	- ActiveRecord associations
+		methods
+			belongs_to
+			has_many
+	reference: http://guides.rubyonrails.org/association_basics.html
 
 
 
+- add methods to related models
+
+- add migration (add foreign key to posts)
+$ rails generate migration AddUserToPosts user:belongs_to
+Running via Spring preloader in process 67567
+      invoke  active_record
+      create    db/migrate/20180629212525_add_user_to_posts.rb
 
 
+- run migration
+$ rails db:migrate
+== 20180629212525 AddUserToPosts: migrating ===================================
+-- add_reference(:posts, :user, {:foreign_key=>true})
+   -> 0.0138s
+== 20180629212525 AddUserToPosts: migrated (0.0139s) ==========================
 
 
+- add link to author to the post show view
+
+- to avoid dev errors, destroy all posts from console
+
+$ rails console
+Running via Spring preloader in process 67861
+Loading development environment (Rails 5.2.0)
+irb(main):001:0>
+irb(main):002:0> Post.all
+  Post Load (1.9ms)  SELECT  "posts".* FROM "posts" LIMIT ?  [["LIMIT", 11]]
+=> #<ActiveRecord::Relation [#<Post id: 1, title: "My first post, be nice!", body: "I'm not sure what to write here!..", created_at: "2018-06-29 00:16:37", updated_at: "2018-06-29 17:55:46", photo_file_name: "DSCN5101.JPG", photo_content_type: "image/jpeg", photo_file_size: 2166684, photo_updated_at: "2018-06-29 17:55:40", user_id: nil>, #<Post id: 2, title: "My second post...", body: "Getting better at this now, hold on...", created_at: "2018-06-29 02:37:51", updated_at: "2018-06-29 17:56:07", photo_file_name: "DSCN5864.JPG", photo_content_type: "image/jpeg", photo_file_size: 3375923, photo_updated_at: "2018-06-29 17:56:01", user_id: nil>, #<Post id: 3, title: "A third post", body: "Ok, I'm still not sure what to write", created_at: "2018-06-29 02:38:09", updated_at: "2018-06-29 17:56:30", photo_file_name: "DSCN6410.jpg", photo_content_type: "image/jpeg", photo_file_size: 6294370, photo_updated_at: "2018-06-29 17:56:24", user_id: nil>, #<Post id: 4, title: "Fourth post", body: "Still as unclear what to write as before", created_at: "2018-06-29 16:06:34", updated_at: "2018-06-29 17:56:55", photo_file_name: "DSCN6453.JPG", photo_content_type: "image/jpeg", photo_file_size: 2096410, photo_updated_at: "2018-06-29 17:56:50", user_id: nil>]>
+irb(main):003:0>
+irb(main):004:0>
+irb(main):005:0> Post.destroy_all
+  Post Load (0.3ms)  SELECT "posts".* FROM "posts"
+   (0.1ms)  begin transaction
+  Post Destroy (1.8ms)  DELETE FROM "posts" WHERE "posts"."id" = ?  [["id", 1]]
+   (1.6ms)  commit transaction
+[paperclip] deleting /Users/user/openclassrooms/project6/traveller/public/system/posts/photos/000/000/001/original/DSCN5101.JPG
+[paperclip] deleting /Users/user/openclassrooms/project6/traveller/public/system/posts/photos/000/000/001/large/DSCN5101.JPG
+[paperclip] deleting /Users/user/openclassrooms/project6/traveller/public/system/posts/photos/000/000/001/medium/DSCN5101.JPG
+[paperclip] deleting /Users/user/openclassrooms/project6/traveller/public/system/posts/photos/000/000/001/thumb/DSCN5101.JPG
+   (0.1ms)  begin transaction
+  Post Destroy (0.4ms)  DELETE FROM "posts" WHERE "posts"."id" = ?  [["id", 2]]
+   (1.7ms)  commit transaction
+[paperclip] deleting /Users/user/openclassrooms/project6/traveller/public/system/posts/photos/000/000/002/original/DSCN5864.JPG
+[paperclip] deleting /Users/user/openclassrooms/project6/traveller/public/system/posts/photos/000/000/002/large/DSCN5864.JPG
+[paperclip] deleting /Users/user/openclassrooms/project6/traveller/public/system/posts/photos/000/000/002/medium/DSCN5864.JPG
+[paperclip] deleting /Users/user/openclassrooms/project6/traveller/public/system/posts/photos/000/000/002/thumb/DSCN5864.JPG
+   (0.1ms)  begin transaction
+  Post Destroy (0.4ms)  DELETE FROM "posts" WHERE "posts"."id" = ?  [["id", 3]]
+   (1.7ms)  commit transaction
+[paperclip] deleting /Users/user/openclassrooms/project6/traveller/public/system/posts/photos/000/000/003/original/DSCN6410.jpg
+[paperclip] deleting /Users/user/openclassrooms/project6/traveller/public/system/posts/photos/000/000/003/large/DSCN6410.jpg
+[paperclip] deleting /Users/user/openclassrooms/project6/traveller/public/system/posts/photos/000/000/003/medium/DSCN6410.jpg
+[paperclip] deleting /Users/user/openclassrooms/project6/traveller/public/system/posts/photos/000/000/003/thumb/DSCN6410.jpg
+   (0.1ms)  begin transaction
+  Post Destroy (0.4ms)  DELETE FROM "posts" WHERE "posts"."id" = ?  [["id", 4]]
+   (3.1ms)  commit transaction
+[paperclip] deleting /Users/user/openclassrooms/project6/traveller/public/system/posts/photos/000/000/004/original/DSCN6453.JPG
+[paperclip] deleting /Users/user/openclassrooms/project6/traveller/public/system/posts/photos/000/000/004/large/DSCN6453.JPG
+[paperclip] deleting /Users/user/openclassrooms/project6/traveller/public/system/posts/photos/000/000/004/medium/DSCN6453.JPG
+[paperclip] deleting /Users/user/openclassrooms/project6/traveller/public/system/posts/photos/000/000/004/thumb/DSCN6453.JPG
+=> [#<Post id: 1, title: "My first post, be nice!", body: "I'm not sure what to write here!..", created_at: "2018-06-29 00:16:37", updated_at: "2018-06-29 17:55:46", photo_file_name: nil, photo_content_type: nil, photo_file_size: nil, photo_updated_at: nil, user_id: nil>, #<Post id: 2, title: "My second post...", body: "Getting better at this now, hold on...", created_at: "2018-06-29 02:37:51", updated_at: "2018-06-29 17:56:07", photo_file_name: nil, photo_content_type: nil, photo_file_size: nil, photo_updated_at: nil, user_id: nil>, #<Post id: 3, title: "A third post", body: "Ok, I'm still not sure what to write", created_at: "2018-06-29 02:38:09", updated_at: "2018-06-29 17:56:30", photo_file_name: nil, photo_content_type: nil, photo_file_size: nil, photo_updated_at: nil, user_id: nil>, #<Post id: 4, title: "Fourth post", body: "Still as unclear what to write as before", created_at: "2018-06-29 16:06:34", updated_at: "2018-06-29 17:56:55", photo_file_name: nil, photo_content_type: nil, photo_file_size: nil, photo_updated_at: nil, user_id: nil>]
+irb(main):006:0>
+irb(main):007:0>
+irb(main):008:0>
 
 
+- adding posts now displays logged in user, if user not logged in, posts won't be created
 
+- update views
+	- update user view to display published posts
+	- update posts index to display post author, and to restrict new, edit and destroy to logged in users
 
+- set ownerships in controllers

@@ -19,6 +19,19 @@
   </head>
 
   <body>
+    <header>
+        <% if current_user %>
+            Hi <%= current_user.name %>
+            |
+            <%= link_to 'Create a post', new_post_path %>
+            |
+            <%= link_to 'Log out', logout_path, method: :delete %>
+        <% else %>
+            <%= link_to 'Log in', login_path %>
+            |
+            <%= link_to 'Sign up', new_user_path %>
+        <% end %>
+    </header>
     <%= yield %>
   </body>
 </html>
