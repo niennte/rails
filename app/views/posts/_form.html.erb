@@ -19,6 +19,12 @@
       <%= form.label :body, id: "post_body" %>
       <%= form.text_area :body %>
 
+      <p>
+          <%= image_tag post.photo.url(:medium) %>
+          <%= form.label :photo%>
+          <%= form.file_field :photo, id: "post_photo" %>
+      </p>
+
     <%= form.submit %>
   </div>
 <% end %>

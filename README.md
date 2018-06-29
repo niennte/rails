@@ -189,4 +189,96 @@ called with
 stylesheet_link_tag  . # path
 
 
+# Photos using Paperclip gem
+(deprecated in favor of Rails' ActiveStorage)
+
+
+$ brew install imagemagick
+
+$ which convert
+/usr/local/bin/convert
+
+- add the gem to Gemfile
+
+$ bundle
+
+$ which file
+/usr/bin/file
+
+- add field and validation to model
+
+$ rails generate paperclip post photo
+Running via Spring preloader in process 64829
+      create  db/migrate/20180629171446_add_attachment_photo_to_posts.rb
+
+$ rails db:migrate
+== 20180629171446 AddAttachmentPhotoToPosts: migrating ========================
+-- change_table(:posts)
+   -> 0.0547s
+== 20180629171446 AddAttachmentPhotoToPosts: migrated (0.0548s) ===============
+
+
+$ rails db
+SQLite version 3.6.3
+Enter ".help" for instructions
+Enter SQL statements terminated with a ";"
+sqlite> .tables;
+unknown command or invalid arguments:  "tables;". Enter ".help" for help
+sqlite>
+sqlite>
+sqlite> .tables
+ar_internal_metadata  posts                 schema_migrations
+sqlite>
+sqlite> .schema posts
+CREATE TABLE "posts" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar, "body" text, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL, "photo_file_name" varchar, "photo_content_type" varchar, "photo_file_size" integer, "photo_updated_at" datetime);
+
+- restart the server
+
+
+- add white list filters in controller
+- add image tag and upload to the views
+
+- after restarting the server, added photos to posts
+
+(see server logs for details, eg)
+
+Started PATCH "/posts/4" for 127.0.0.1 at 2018-06-29 13:37:41 -0400
+Processing by PostsController#update as HTML
+  Parameters: {"utf8"=>"✓", "authenticity_token"=>"fUGtROdxO0Zaf+2aKMP01ed7A5gmvXlenaAvKr8SV7eSmGatGHNUB+c1XS8+wNh9h6BoPEj7vccOJ1cWsIsmIQ==", "post"=>{"title"=>"Fourth post", "body"=>"Still as unclear what to write as before", "photo"=>#<ActionDispatch::Http::UploadedFile:0x00007f9aa9953530 @tempfile=#<Tempfile:/var/folders/t3/lfd6kxln3258q1j_5djzdmnh0000gn/T/RackMultipart20180629-64896-1lvm0l7.JPG>, @original_filename="DSCN6453.JPG", @content_type="image/jpeg", @headers="Content-Disposition: form-data; name=\"post[photo]\"; filename=\"DSCN6453.JPG\"\r\nContent-Type: image/jpeg\r\n">}, "commit"=>"Update Post", "id"=>"4"}
+  Post Load (0.2ms)  SELECT  "posts".* FROM "posts" WHERE "posts"."id" = ? LIMIT ?  [["id", 4], ["LIMIT", 1]]
+  ↳ app/controllers/posts_controller.rb:67
+   (0.1ms)  begin transaction
+  ↳ app/controllers/posts_controller.rb:44
+[paperclip] Trying to link /var/folders/t3/lfd6kxln3258q1j_5djzdmnh0000gn/T/RackMultipart20180629-64896-1lvm0l7.JPG to /var/folders/t3/lfd6kxln3258q1j_5djzdmnh0000gn/T/4d90bb849a9ec9731d77229333cdf5c120180629-64896-1itdsjn.JPG
+[paperclip] Trying to link /var/folders/t3/lfd6kxln3258q1j_5djzdmnh0000gn/T/4d90bb849a9ec9731d77229333cdf5c120180629-64896-1itdsjn.JPG to /var/folders/t3/lfd6kxln3258q1j_5djzdmnh0000gn/T/4d90bb849a9ec9731d77229333cdf5c120180629-64896-4bjdfn.JPG
+Command :: file -b --mime '/var/folders/t3/lfd6kxln3258q1j_5djzdmnh0000gn/T/4d90bb849a9ec9731d77229333cdf5c120180629-64896-4bjdfn.JPG'
+Command :: identify -format '%wx%h,%[exif:orientation]' '/var/folders/t3/lfd6kxln3258q1j_5djzdmnh0000gn/T/4d90bb849a9ec9731d77229333cdf5c120180629-64896-1itdsjn.JPG[0]' 2>/dev/null
+Command :: identify -format %m '/var/folders/t3/lfd6kxln3258q1j_5djzdmnh0000gn/T/4d90bb849a9ec9731d77229333cdf5c120180629-64896-1itdsjn.JPG[0]'
+Command :: convert '/var/folders/t3/lfd6kxln3258q1j_5djzdmnh0000gn/T/4d90bb849a9ec9731d77229333cdf5c120180629-64896-1itdsjn.JPG[0]' -auto-orient -resize "300x300>" '/var/folders/t3/lfd6kxln3258q1j_5djzdmnh0000gn/T/0ffdebf05fe487f149a1d22f127368a620180629-64896-1064lsk'
+[paperclip] Trying to link /var/folders/t3/lfd6kxln3258q1j_5djzdmnh0000gn/T/0ffdebf05fe487f149a1d22f127368a620180629-64896-1064lsk to /var/folders/t3/lfd6kxln3258q1j_5djzdmnh0000gn/T/ee9da5e4fc5c4e74a8e80c2a11857d4520180629-64896-1jkdn4n
+Command :: identify -format '%wx%h,%[exif:orientation]' '/var/folders/t3/lfd6kxln3258q1j_5djzdmnh0000gn/T/4d90bb849a9ec9731d77229333cdf5c120180629-64896-1itdsjn.JPG[0]' 2>/dev/null
+Command :: identify -format %m '/var/folders/t3/lfd6kxln3258q1j_5djzdmnh0000gn/T/4d90bb849a9ec9731d77229333cdf5c120180629-64896-1itdsjn.JPG[0]'
+Command :: convert '/var/folders/t3/lfd6kxln3258q1j_5djzdmnh0000gn/T/4d90bb849a9ec9731d77229333cdf5c120180629-64896-1itdsjn.JPG[0]' -auto-orient -resize "100x100>" '/var/folders/t3/lfd6kxln3258q1j_5djzdmnh0000gn/T/0ffdebf05fe487f149a1d22f127368a620180629-64896-gjwqea'
+[paperclip] Trying to link /var/folders/t3/lfd6kxln3258q1j_5djzdmnh0000gn/T/0ffdebf05fe487f149a1d22f127368a620180629-64896-gjwqea to /var/folders/t3/lfd6kxln3258q1j_5djzdmnh0000gn/T/7724862527e3a47877557b44a0d2b36420180629-64896-7eubt8
+[paperclip] Trying to link /var/folders/t3/lfd6kxln3258q1j_5djzdmnh0000gn/T/4d90bb849a9ec9731d77229333cdf5c120180629-64896-1itdsjn.JPG to /var/folders/t3/lfd6kxln3258q1j_5djzdmnh0000gn/T/4d90bb849a9ec9731d77229333cdf5c120180629-64896-yyp9v5.JPG
+Command :: file -b --mime '/var/folders/t3/lfd6kxln3258q1j_5djzdmnh0000gn/T/4d90bb849a9ec9731d77229333cdf5c120180629-64896-yyp9v5.JPG'
+  Post Update (0.5ms)  UPDATE "posts" SET "photo_file_name" = ?, "photo_content_type" = ?, "photo_file_size" = ?, "photo_updated_at" = ?, "updated_at" = ? WHERE "posts"."id" = ?  [["photo_file_name", "DSCN6453.JPG"], ["photo_content_type", "image/jpeg"], ["photo_file_size", 2096410], ["photo_updated_at", "2018-06-29 17:37:41.329595"], ["updated_at", "2018-06-29 17:37:44.955782"], ["id", 4]]
+  ↳ app/controllers/posts_controller.rb:44
+   (1.9ms)  commit transaction
+  ↳ app/controllers/posts_controller.rb:44
+Redirected to http://localhost:3000/posts/4
+Completed 302 Found in 3736ms (ActiveRecord: 2.6ms)
+
+
+
+
+
+
+
+
+
+
+
+
+
 
