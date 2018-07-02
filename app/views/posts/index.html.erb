@@ -15,12 +15,28 @@
         <% @posts.each do |post| %>
           <tr>
             <td><%= image_tag post.photo.url(:thumb) %></td>
-            <td><%= link_to post.title, post %></td>
-            <td>by <%= link_to post.user.name, post.user %></td>
-            <% if current_user == post.user%>
-                <td><%= link_to 'Edit', edit_post_path(post) %></td>
-                <td><%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-            <% end %>
+            <td>
+                <%= link_to post.title, post %>
+            </td>
+            <td>by
+                <% if current_user == post.user%>
+                    <%= link_to 'you', post.user %>
+                <% else %>
+                    <%= link_to post.user.name, post.user %>
+                <% end %>
+                <%= image_tag post.user.avatar.url(:micro) %>
+            </td>
+            <td>
+                <% if current_user == post.user%>
+                    <%= link_to 'Edit', edit_post_path(post) %>
+                <% end %>
+            </td>
+            <td>
+                <% if current_user == post.user%>
+                    <%= link_to 'Destroy', post, method: :delete, data: { confirm: 'Are you sure?' } %>
+                <% end %>
+            </td>
+
           </tr>
         <% end %>
       </tbody>

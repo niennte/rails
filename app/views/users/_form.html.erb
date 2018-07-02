@@ -25,6 +25,12 @@
       <%= form.label :password_confirmation %>
       <%= form.password_field :password_confirmation %>
 
+      <p>
+          <%= image_tag user.avatar.url(:medium) %>
+          <%= form.label :avatar%>
+          <%= form.file_field :avatar, id: "user_avatar" %>
+      </p>
+
     <%= form.submit %>
   </div>
 <% end %>

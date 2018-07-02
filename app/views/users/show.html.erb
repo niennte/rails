@@ -1,6 +1,9 @@
 <p id="notice"><%= notice %></p>
 
-<h3>User: <%= @user.name %></h3>
+<h3>
+    User: <%= @user.name %>
+    <%= image_tag @user.avatar.url(:thumb) %>
+</h3>
 
 <% @user.posts.each do |post| %>
     <h2><%= link_to post.title, post %></h2>
