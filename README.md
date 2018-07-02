@@ -550,3 +550,36 @@ $ rails db:migrate
 
 	# now if full address added to post, will display coordinates
 	# if address incomplete, it is saved but coordinates are not
+
+
+## ??????? - experimenting with Mapbox as Mapzen services discontinued:
+
+    - Trying https://www.mapbox.com/
+
+    	reference: https://www.mapbox.com/mapbox-gl-js/api/
+
+    	sign in creds:
+    	arcenciel email
+    	nnothing UN
+    	the wise simple pw
+
+    	access token:
+    	pk.eyJ1Ijoibmllbm50ZSIsImEiOiJjamo0ajE5aDgxajJhM2twZzB4cWRxNXFzIn0.wrH52IDoERpZGasQNOjUXg
+
+    	going through HTML route using CSDN (there is NPM bundle instructions too)
+
+    	<script src='https://api.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.js'></script>
+    	<link href='https://api.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.css' rel='stylesheet' />
+
+    experimenting:
+    add image to map:
+    https://www.mapbox.com/mapbox-gl-js/example/add-image/
+
+    examples:
+    https://www.mapbox.com/mapbox-gl-js/example/popup-on-hover/
+
+    add pop up:
+    https://www.mapbox.com/mapbox-gl-js/example/popup-on-hover/
+
+    - made haard coded test map, localized to the application layout and the site home view
+
