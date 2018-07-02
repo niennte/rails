@@ -453,3 +453,100 @@ irb(main):008:0>
 	- update posts index to display post author, and to restrict new, edit and destroy to logged in users
 
 - set ownerships in controllers
+
+- - -
+- - -
+Map!
+
+	enable travellers to post to a map, and users, to discover posts on the map.
+
+
+# Add backend geocoding functionality
+
+- add geocoder gem
+	(add to Gemfile)
+	reference:
+	http://www.rubygeocoder.com
+	https://github.com/alexreisner/geocoder
+
+$ vi Gemfile
+...
++ gem 'geocoder'
+...
+
+
+- bundle
+	$ rails bundle
+
+$ rails bundle
+...
+Bundle complete! 21 Gemfile dependencies, 85 gems now installed.
+Use `bundle info [gemname]` to see where a bundled gem is installed.
+Post-install message from geocoder:
+
+
+NOTE: Geocoder's default IP address lookup has changed from FreeGeoIP.net to IPInfo.io. If you explicitly specify :freegeoip in your configuration you must choose a different IP lookup before FreeGeoIP is discontinued on July 1, 2018. If you do not explicitly specify :freegeoip you do not need to change anything.
+
+	#info
+		$ bundle info geocoder
+		  * geocoder (1.4.9)
+			Summary: Complete geocoding solution for Ruby.
+			Homepage: http://www.rubygeocoder.com
+			Path: /Users/user/.rbenv/versions/2.5.0/lib/ruby/gems/2.5.0/gems/geocoder-1.4.9
+
+- restart server if necessary
+
+
+# usage in model
+	locate posts by latitude and longitude
+
+- create migration
+	$ rails g migration add_address_longitude_and_latitude_to_posts address:string latitude:float longitude:float
+
+	- g is shortcut for generate
+
+$ rails g migration add_address_longitude_and_latitude_to_posts address:string latitude:float longitude:float
+Running via Spring preloader in process 86787
+      invoke  active_record
+      create    db/migrate/20180702161550_add_address_longitude_and_latitude_to_posts.rb
+
+- run migration
+	$ rails db:migrate
+
+$ rails db:migrate
+== 20180702161550 AddAddressLongitudeAndLatitudeToPosts: migrating ============
+-- add_column(:posts, :address, :string)
+   -> 0.0017s
+-- add_column(:posts, :latitude, :float)
+   -> 0.0076s
+-- add_column(:posts, :longitude, :float)
+   -> 0.0005s
+== 20180702161550 AddAddressLongitudeAndLatitudeToPosts: migrated (0.0426s) ===
+
+
+	# info
+	$ rails db
+		SQLite version 3.6.3
+		Enter ".help" for instructions
+		Enter SQL statements terminated with a ";"
+		sqlite> .schema posts
+		CREATE TABLE "posts" ("id" integer PRIMARY KEY AUTOINCREMENT NOT NULL, "title" varchar, "body" text, "created_at" datetime NOT NULL, "updated_at" datetime NOT NULL, "photo_file_name" varchar, "photo_content_type" varchar, "photo_file_size" integer, "photo_updated_at" datetime, "user_id" integer, "address" varchar, "latitude" float, "longitude" float);
+		CREATE INDEX "index_posts_on_user_id" ON "posts" ("user_id");
+		sqlite>
+
+
+- in the post model, add geocode methods:
+	geocoded_by :address
+
+	* note: if: :address_changed?
+		[field]_changed? - Rails model method
+
+
+- in the post form, add address field
+
+- in the posts controller, add whitelist permissions
+
+- in the post show view, add text placeholder to display coordinates
+
+	# now if full address added to post, will display coordinates
+	# if address incomplete, it is saved but coordinates are not
