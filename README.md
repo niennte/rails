@@ -550,3 +550,24 @@ $ rails db:migrate
 
 	# now if full address added to post, will display coordinates
 	# if address incomplete, it is saved but coordinates are not
+
+
+## organizing assets
+- path for third party bundles
+$ mkdir -p vendor/assets/stylesheets
+$ mkdir -p vendor/assets/javascripts
+
+- normalize used with milligram
+$ curl https://cdn.rawgit.com/necolas/normalize.css/master/normalize.css > vendor/assets/stylesheets/normalize.css
+
+- milligram
+$ curl https://cdn.rawgit.com/milligram/milligram/master/dist/milligram.min.css > vendor/assets/stylesheets/milligram.css
+
+- if necessary, restart server after changes to FS
+
+vi app/assets/stylesheets/application.css
+...
+*= require normalize
+*= require milligram
+...
+
