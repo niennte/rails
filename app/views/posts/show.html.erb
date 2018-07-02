@@ -7,6 +7,11 @@
     <%= image_tag @post.user.avatar.url(:micro) %>
 </p>
 
+<% if @post.address.present? %>
+    <p>address: <%= @post.address %></p>
+    <p>coordinates: <%= @post.longitude %>, <%= @post.latitude %></p>
+<% end %>
+
 <% if @post.photo.present? %>
     <p><%= image_tag @post.photo.url(:large) %></p>
 <% end %>

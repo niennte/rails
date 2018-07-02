@@ -39,6 +39,7 @@ gem 'bootsnap', '>= 1.1.0', require: false
 # Power attaching photos to posts
 # -- DEPRECATED in favor of ActiveStorage
 gem 'paperclip'
+gem 'geocoder'
 
 
 group :development, :test do

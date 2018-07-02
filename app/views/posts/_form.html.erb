@@ -19,6 +19,9 @@
       <%= form.label :body, id: "post_body" %>
       <%= form.text_area :body %>
 
+      <%= form.label :address %>
+      <%= form.text_area :address, id: "post_address" %>
+
       <p>
           <%= image_tag post.photo.url(:medium) %>
           <%= form.label :photo%>

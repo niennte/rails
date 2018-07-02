@@ -10,4 +10,11 @@ class Post < ApplicationRecord
   validates_attachment_content_type :photo, content_type: /\Aimage\/.*\z/
 
   belongs_to :user
+
+  # geocoder gem methods
+  geocoded_by :address
+  after_validation :geocode, if: :address_changed?
+  # the latter rails generated helper method:
+  # every DB field has a method like this
+  # geocode method looks up coordinates for the address
 end
