@@ -571,3 +571,56 @@ vi app/assets/stylesheets/application.css
 *= require milligram
 ...
 
+
+
+# frontend map
+
+-- # implementing mapbox
+	rerference: https://www.mapbox.com/
+
+	    	reference: https://www.mapbox.com/mapbox-gl-js/api/
+	    	access token:
+	    	pk.eyJ1Ijoibmllbm50ZSIsImEiOiJjamo0ajE5aDgxajJhM2twZzB4cWRxNXFzIn0.wrH52IDoERpZGasQNOjUXg
+
+            examples:
+            https://www.mapbox.com/mapbox-gl-js/example/popup-on-hover/
+
+- place assets:
+
+$ curl https://api.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.css > vendor/assets/stylesheets/mapbox-gl.css
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100 30472  100 30472    0     0  45086      0 --:--:-- --:--:-- --:--:-- 45143
+
+
+$ curl https://api.mapbox.com/mapbox-gl-js/v0.46.0/mapbox-gl.js > vendor/assets/javascripts/mapbox-gl.js
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+100  609k  100  609k    0     0   389k      0  0:00:01  0:00:01 --:--:--  389k
+
+- update manifests:
+
+$ vi app/assets/stylesheets/application.css
+...
+   *= require fonts
+ + *= require mapbox-gl
+   *= require_self
+ ...
+
+$ vi app/assets/javascripts/application.js
+...
+  //= require turbolinks
++ //= require mapbox-gl
+  //= require_tree .
+ ...
+
+- add javascript for the map to posts.js
+
+$ vi app/assets/javascripts/posts.js
+... // sample code goes here
+	-- note: wrapping into window.onload
+	-- use hardcoded GeoJSON object
+
+- update the posts index view to display map
+	- adding a div with the id of "map"
+	- adding styles to "map" (required height)
