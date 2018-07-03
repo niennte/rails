@@ -6,6 +6,27 @@ class PostsController < ApplicationController
   # GET /posts.json
   def index
     @posts = Post.all
+
+    respond_to do |format|
+      format.html
+      format.json do
+        geojson = @posts.map do |post|
+          {
+              type: 'Feature',
+              geometry: {
+                  type: 'Point',
+                  coordinates: [post.longitude, post.latitude]
+              },
+              properties: {
+                  name: post.title,
+                  popupContent: render_to_string(partial: 'posts/post.html', locals: { post: post }),
+                  address: post.address
+              }
+          }
+        end
+        render json: geojson
+      end
+    end
   end
 
   # GET /posts/1
