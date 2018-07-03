@@ -14,5 +14,6 @@
  *= require normalize
  *= require milligram
  *= require fonts
+ *= require mapbox-gl
  *= require_self
  */
