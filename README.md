@@ -624,3 +624,46 @@ $ vi app/assets/javascripts/posts.js
 - update the posts index view to display map
 	- adding a div with the id of "map"
 	- adding styles to "map" (required height)
+
+
+
+
+-- connect front end map to back end
+	- get geoJson object from the controller via AJAX
+	see: https://github.com/niennte/rails/commit/056132d62642e2370e8676f0acc1f50153b97a2c
+
+- in the posts controller, set up geoJSON response
+	-- .json format
+	respond_to do |format|
+		format.html # defaults to action name
+		format.json do
+			# do stuff
+			render # render stuff
+		end
+	end
+	-- geoJSON
+	reference: http://geojson.org/
+
+
+- create a partial view referred to in the response
+
+-- in posts.js, add the AJAX call
+see: https://github.com/niennte/rails/commit/9c53f958b3d78053847f5685811f4783fb4abc46
+
+- add jQuery
+	* adding via public CDN as it is likely to be already cached in most users
+	https://code.jquery.com/
+
+- in posts.js, add AJAX the call, wrap rest as a callback
+
+- in the application layout, add controller and action names as body classes
+- in posts.js, call AJAX conditionally on body class (limit script scope)
+	idea introduced here: https://brandonhilkert.com/blog/page-specific-javascript-in-rails/
+
+
+- add popup functionality
+	- initially using MapBox boilerplate
+
+- scale map to contain existing posts
+
+- center map around coordinates average
