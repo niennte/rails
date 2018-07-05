@@ -667,3 +667,126 @@ see: https://github.com/niennte/rails/commit/9c53f958b3d78053847f5685811f4783fb4
 - scale map to contain existing posts
 
 - center map around coordinates average
+
+
+
+
+
+
+
+
+
+
+### Testing
+- data
+	- rails own a separate database for testing
+	- gets updated with every migration
+	- test fixtures (dummy data)
+	reference: http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+	* assertion helpers: http://guides.rubyonrails.org/testing.html#available-assertions
+
+
+# - - -
+	## Controller tests
+	HTTP results, database, sessions, flash, cookies caused by your controller actions
+
+
+$ vi test/fixtures/posts.yml
+... add data
+
+$ vi test/fixtures/users.yml
+... add data
+
+
+- in the user controller test, update behavior expectations
+
+$ vi test/controllers/user_controller_test.rb
+	- methods can be superclassed to the included ./test_helper
+	loading the environment and providing helper methods
+
+- run tests
+
+$ rails test [test name] # add -v for details
+
+$ rails test test/controllers/users_controller_test.rb
+Running via Spring preloader in process 97696
+Run options: --seed 44130
+
+# Running:
+
+.........
+
+Finished in 3.333920s, 2.6995 runs/s, 3.2994 assertions/s.
+9 runs, 11 assertions, 0 failures, 0 errors, 0 skips
+
+
+- in the sessions controller test, update route (login instead of sessions)
+
+    handle has_secure_password:
+	- add passwords to fixtures
+	* fixtures are passed through erb processor
+	so can hash programmatically using BCrypt gem:
+	password_digest: <%= BCrypt:Password.create('secret', cost: 5) %>
+
+- refactor login so that user gets logged in after signing up. Superclass login func.
+
+
+# - - -
+	## Integration tests.
+	Testing across controllers.
+
+	- eg, use integrations test that user who is logged in can use edit, update and destroy actions for own user accounts and posts
+
+$ vi test/integration/user_workflows.rb
+	- extends same class as controller test --
+	differences understood as semantic
+
+	*- first argument to an assert statement is the expected value
+
+
+# - - -
+	## System tests:
+		tests system end to end,
+		loads pages in the actual browser, can test front end concerns,
+		saves problems as screenshots to tmp/
+		expensive test
+		eg, test the map, including AJAX calls
+
+$ vi test/system/posts.rb
+		include and extend application_system_test_case
+		could superclass repeating logic
+
+-* had to fix web drivers, to avoid test error:
+$ gem install webdrivers
+	reference: https://stackoverflow.com/questions/42572019/seleniumwebdrivererrorwebdrivererror-unable-to-connect-to-chromedriver?rq=1
+
+-* fixed missing images, to avoid test error
+	test failing as expected :))
+
+
+$ rails test test/system/posts.rb
+Running via Spring preloader in process 10019
+Run options: --seed 33005
+
+# Running:
+
+Capybara starting Puma...
+* Version 3.11.4 , codename: Love Song
+* Min threads: 0, max threads: 4
+* Listening on tcp://127.0.0.1:62693
+.
+
+Finished in 13.067903s, 0.0765 runs/s, 0.0765 assertions/s.
+1 runs, 1 assertions, 0 failures, 0 errors, 0 skips
+
+
+
+	## unit tests
+		opposite approach: testing small units, like model methods
+		if generated, defined under models
+
+Rails testing reference:
+http://guides.rubyonrails.org/testing.html
+
+
