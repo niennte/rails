@@ -6,8 +6,7 @@ class SessionsController < ApplicationController
   def create
     user = User.find_by(email: params[:session][:email])
     if user && user.authenticate(params[:session][:password])
-      # create a session here
-      session[:user_id] = user.id
+      login(user)
       redirect_to user
     else
       flash.now[:error] = 'Bad email/password combination. Please try again.'
@@ -17,8 +16,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    session.delete(:user_id)
-    @current_user = nil
+    logout
     redirect_to site_home_path
   end
 
