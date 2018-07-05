@@ -21,7 +21,7 @@ class User < ApplicationRecord
   # paperclip gem methods
   has_attached_file :avatar, \
   styles: { medium: '150x150>', thumb: '50x50>', micro: '25x25' }, \
-  default_url: '/images/:style/default_user.png'
+  default_url: '/images/:style/default_avatar.jpeg'
   validates_attachment_content_type :avatar, content_type: /\Aimage\/.*\z/
 
 end

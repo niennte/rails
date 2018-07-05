@@ -12,9 +12,8 @@
     <p>coordinates: <%= @post.longitude %>, <%= @post.latitude %></p>
 <% end %>
 
-<% if @post.photo.present? %>
-    <p><%= image_tag @post.photo.url(:large) %></p>
-<% end %>
+<p><%= image_tag @post.photo.url(:large) %></p>
+
 
 <p><%= @post.body %></p>
 
