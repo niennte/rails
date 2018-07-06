@@ -97,7 +97,7 @@ $(document).ready(function() {
             // so allow users time to figure out what part of the world is being displayed
             // without getting too sea sick
             setTimeout(function(){
-                map.fitBounds(mapBounds(coordinates, 0.11));
+                map.fitBounds(mapBounds(coordinates, 5));
             }, 800);
 
             // Create a popup, but don't add it to the map yet.

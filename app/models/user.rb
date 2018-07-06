@@ -3,8 +3,8 @@ class User < ApplicationRecord
   EMAIL_FORMAT = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
 
   before_validation {
-    self.email = self.email.downcase unless self.email.nil?
-    self.email = self.email.gsub(/\s+/, '') unless self.email.nil?
+    self.email = email.downcase unless email.nil?
+    self.email = email.gsub(/\s+/, '') unless email.nil?
   }
 
   validates :name, presence: true

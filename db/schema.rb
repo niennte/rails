@@ -12,6 +12,9 @@
 
 ActiveRecord::Schema.define(version: 2018_07_02_161550) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "posts", force: :cascade do |t|
     t.string "title"
     t.text "body"
@@ -21,7 +24,7 @@ ActiveRecord::Schema.define(version: 2018_07_02_161550) do
     t.string "photo_content_type"
     t.integer "photo_file_size"
     t.datetime "photo_updated_at"
-    t.integer "user_id"
+    t.bigint "user_id"
     t.string "address"
     t.float "latitude"
     t.float "longitude"
@@ -40,4 +43,5 @@ ActiveRecord::Schema.define(version: 2018_07_02_161550) do
     t.datetime "avatar_updated_at"
   end
 
+  add_foreign_key "posts", "users"
 end
